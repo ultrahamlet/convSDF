@@ -1,13 +1,13 @@
 # convSDF
 
-cnvSDF.py
+# cnvSDF.py
 
 convert json output from "SDF Editor" to SLSL code for Shadertoy or GLSL.
 
 
 
 
-showSDF.frag
+# showSDF.frag
 
 This code is based on bwlow ocde
 GLSL Sandbox
