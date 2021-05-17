@@ -1,0 +1,299 @@
+{
+	"primitives": [
+		[
+			"pEllipsoid",
+			"Vector3( 0.3, 0.7, 0.3 )"
+		],
+		[
+			"pEllipsoid",
+			"Vector3( 0.3, 0.7, 0.3 )"
+		],
+		[
+			"pEllipsoid",
+			"Vector3( 0.3, 0.7, 0.3 )"
+		],
+		[
+			"pEllipsoid",
+			"Vector3( 0.3, 0.7, 0.3 )"
+		],
+		[
+			"pEllipsoid",
+			"Vector3( 0.3, 0.7, 0.3 )"
+		],
+		[
+			"pEllipsoid",
+			"Vector3( 0.4, 0.5, 0.5 )"
+		],
+		[
+			"pEllipsoid",
+			"Vector3( 0.3, 0.3, 0.3 )"
+		],
+		[
+			"pEllipsoid",
+			"Vector3( 0.3, 0.4, 0.3 )"
+		],
+		[
+			"pEllipsoid",
+			"Vector3( 0.3, 0.4, 0.3 )"
+		],
+		[
+			"pEllipsoid",
+			"Vector3( 0.3, 0.4, 0.3 )"
+		],
+		[
+			"pEllipsoid",
+			"Vector3( 0.5, 0.4, 0.3 )"
+		],
+		[
+			"pEllipsoid",
+			"Vector3( 0.25, 0.25, 0.25 )"
+		]
+	],
+	"modifiers": [
+		[
+			"mTranslation",
+			[
+				[
+					"mRotation",
+					[
+						[
+							"ref",
+							0
+						]
+					],
+					"Vector3( 0, 0, 0 )"
+				]
+			],
+			"Vector3( 0, 0, 0 )"
+		],
+		[
+			"mTranslation",
+			[
+				[
+					"mRotation",
+					[
+						[
+							"ref",
+							1
+						]
+					],
+					"Vector3( 0, 0, -10 )"
+				]
+			],
+			"Vector3( 0.6, -0.1, 0 )"
+		],
+		[
+			"mTranslation",
+			[
+				[
+					"mRotation",
+					[
+						[
+							"ref",
+							2
+						]
+					],
+					"Vector3( 0, 0, 10 )"
+				]
+			],
+			"Vector3( -0.6, -0.1, 0 )"
+		],
+		[
+			"mTranslation",
+			[
+				[
+					"mRotation",
+					[
+						[
+							"ref",
+							3
+						]
+					],
+					"Vector3( 0, 0, 20 )"
+				]
+			],
+			"Vector3( -1.2, -0.3, 0 )"
+		],
+		[
+			"mTranslation",
+			[
+				[
+					"mRotation",
+					[
+						[
+							"ref",
+							4
+						]
+					],
+					"Vector3( 0, 0, -20 )"
+				]
+			],
+			"Vector3( 1.2, -0.3, 0 )"
+		],
+		[
+			"mTranslation",
+			[
+				[
+					"mRotation",
+					[
+						[
+							"ref",
+							5
+						]
+					],
+					"Vector3( 0, 0, 0 )"
+				]
+			],
+			"Vector3( -1.4, -1, 0.1 )"
+		],
+		[
+			"mTranslation",
+			[
+				[
+					"mRotation",
+					[
+						[
+							"ref",
+							6
+						]
+					],
+					"Vector3( 0, 0, 0 )"
+				]
+			],
+			"Vector3( -0.9, -1, 0.3 )"
+		],
+		[
+			"mTranslation",
+			[
+				[
+					"mRotation",
+					[
+						[
+							"ref",
+							7
+						]
+					],
+					"Vector3( 0, 0, 0 )"
+				]
+			],
+			"Vector3( -0.5, -1, 0 )"
+		],
+		[
+			"mTranslation",
+			[
+				[
+					"mRotation",
+					[
+						[
+							"ref",
+							8
+						]
+					],
+					"Vector3( 0, 0, 0 )"
+				]
+			],
+			"Vector3( -0.1, -1, 0 )"
+		],
+		[
+			"mTranslation",
+			[
+				[
+					"mRotation",
+					[
+						[
+							"ref",
+							9
+						]
+					],
+					"Vector3( 0, 0, 0 )"
+				]
+			],
+			"Vector3( 0.4, -1.1, 0 )"
+		],
+		[
+			"mTranslation",
+			[
+				[
+					"mRotation",
+					[
+						[
+							"ref",
+							10
+						]
+					],
+					"Vector3( 0, 0, 0 )"
+				]
+			],
+			"Vector3( 1, -1.2, 0 )"
+		],
+		[
+			"mTranslation",
+			[
+				[
+					"mRotation",
+					[
+						[
+							"ref",
+							11
+						]
+					],
+					"Vector3( 0, 0, 0 )"
+				]
+			],
+			"Vector3( -0.6, -1, 0.3 )"
+		]
+	],
+	"operator_tree": [
+		"oUnion",
+		[
+			[
+				"ref",
+				0
+			],
+			[
+				"ref",
+				1
+			],
+			[
+				"ref",
+				2
+			],
+			[
+				"ref",
+				3
+			],
+			[
+				"ref",
+				4
+			],
+			[
+				"ref",
+				5
+			],
+			[
+				"ref",
+				6
+			],
+			[
+				"ref",
+				7
+			],
+			[
+				"ref",
+				8
+			],
+			[
+				"ref",
+				9
+			],
+			[
+				"ref",
+				10
+			],
+			[
+				"ref",
+				11
+			]
+		]
+	]
+}
