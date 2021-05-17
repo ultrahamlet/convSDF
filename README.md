@@ -9,6 +9,8 @@ Shadertoy showing with abobe modeling data:
 
 ![alt text](https://github.com/ultrahamlet/convSDF/blob/main/shadertoy.jpg?raw=true)
 
+![alt text](https://github.com/ultrahamlet/convSDF/blob/main/shadertoy2.jpg?raw=true)
+
 -> real time rendering example via browser http://dcf.jp/cascade.html
 
 
