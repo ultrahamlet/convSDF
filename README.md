@@ -1,15 +1,22 @@
 # convSDF
 
 "convSDF" convert json file from "SDF Editor" to GLSL code.
+
+"SDF Editor" is prototype SDF modeling tool.
 ![alt text](https://github.com/ultrahamlet/convSDF/blob/main/blob.jpg?raw=true)
 
-Shadertoy:
+Shadertoy showing with abobe modeling data:
 
 ![alt text](https://github.com/ultrahamlet/convSDF/blob/main/shadertoy.jpg?raw=true)
 
+This converter is limited to ellipsoid SDF so far.
+Prepare ellipsoids as follows:
+
+![alt text](https://github.com/ultrahamlet/convSDF/blob/main/menu.jpg?raw=true)
+
 # cnvSDF.py
 
-convert json output from "SDF Editor" to SLSL code for Shadertoy or GLSL.
+convert json output from "SDF Editor" to GLSL code for Shadertoy or GLSL Sandbox.
 
 
 
