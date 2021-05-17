@@ -1,6 +1,11 @@
 # convSDF
 
-![alt text](https://github.com/ultrahamet/cnvSDF/blob.jpg?raw=true)
+"convSDF" convert json file from "SDF Editor" to GLSL code.
+![alt text](https://github.com/ultrahamlet/convSDF/blob/main/blob.jpg?raw=true)
+
+Shadertoy:
+
+![alt text](https://github.com/ultrahamlet/convSDF/blob/main/shadertoy.jpg?raw=true)
 
 # cnvSDF.py
 
