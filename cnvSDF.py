@@ -78,6 +78,10 @@ def total(mf):
                     val  = str(float(prim[mf[1]][2]))
                     prm.append('float ToRa_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
+                if prHead == 'pSphere':
+                   val = str(float(prVal))
+                   prm.append('float SpRa_' + str(gcount) + ' = ' + val + ';')
+                   gcount += 1
                 if prHead == 'pCone':
                     val = str(float(prVal))
                     #val1 = str(float(prVal))
@@ -280,7 +284,7 @@ def total2(mf):
     if len(mf) > 1:
         #print(len(mf[0]),len(mf), mf)
         if not isinstance(mf[0], list):
-                #print(mf[0])
+                #print('===',mf)
                 if(mf[0] == 'oThicken'):
                     #print('float ThTh_' + str(gcount) + ' = ' + str(mf[2]) + ';')
                     gcount += 1
@@ -290,6 +294,9 @@ def total2(mf):
                 if(mf[0] == 'oSmoothSubtraction'):
                     print('float SmTr_' + str(gcount) + ' = ' + str(mf[2]) + ';')
                     gcount += 1
+                #if(mf[0] == 'oSubtraction'):
+                #    print('float SpRa_' + str(gcount) + ' = ' + str(mf[2]) + ';')
+                #    gcount += 1
 
         for mem in mf:
             if isinstance(mem, list):
