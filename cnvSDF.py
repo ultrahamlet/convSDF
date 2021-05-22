@@ -286,7 +286,7 @@ def total2(mf):
         if not isinstance(mf[0], list):
                 #print('===',mf)
                 if(mf[0] == 'oThicken'):
-                    #print('float ThTh_' + str(gcount) + ' = ' + str(mf[2]) + ';')
+                    print('float ThTh_' + str(gcount) + ' = ' + str(mf[2]) + ';')
                     gcount += 1
                 if(mf[0] == 'oSmoothUnion'):
                     print('float SmTr_' + str(gcount) + ' = ' + str(mf[2]) + ';')
@@ -295,8 +295,17 @@ def total2(mf):
                     print('float SmTr_' + str(gcount) + ' = ' + str(mf[2]) + ';')
                     gcount += 1
                 #if(mf[0] == 'oSubtraction'):
+                if(mf[0] == 'oOnion'):
+                    print('float OnTh_' + str(gcount) + ' = ' + str(mf[2]) + ';')
                 #    print('float SpRa_' + str(gcount) + ' = ' + str(mf[2]) + ';')
                 #    gcount += 1
+                    gcount += 1
+                if(mf[0] == 'oSmoothIntersection'):
+                    print('float SmTr_' + str(gcount) + ' = ' + str(mf[2]) + ';')
+                    gcount += 1
+
+
+
 
         for mem in mf:
             if isinstance(mem, list):
