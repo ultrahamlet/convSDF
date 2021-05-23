@@ -282,7 +282,7 @@ def total(mf):
 def total2(mf):
     global gcount
     if len(mf) > 1:
-        #print(len(mf[0]),len(mf), mf)
+        #print('> ',len(mf[0]),len(mf), mf[0],mf)
         if not isinstance(mf[0], list):
                 #print('===',mf)
                 if(mf[0] == 'oThicken'):
@@ -303,9 +303,6 @@ def total2(mf):
                 if(mf[0] == 'oSmoothIntersection'):
                     print('float SmTr_' + str(gcount) + ' = ' + str(mf[2]) + ';')
                     gcount += 1
-
-
-
 
         for mem in mf:
             if isinstance(mem, list):
@@ -331,9 +328,8 @@ opt = json_dict['operator_tree']
 ###    total2(a[0])
 
 for op in  opt:
-
     #print('----',len(opt),'  ',opt)
-    total2(op[0])
+    total2(op)
 print('//----------------------------------------------------------------')
 
 
