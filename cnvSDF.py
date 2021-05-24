@@ -1,127 +1,305 @@
 import json
-import numpy as np
-import quaternion
-
-# -*- coding: utf-8 -*-
+from scipy.spatial.transform import Rotation
 import numpy as np
 
-def rotate_x(deg):
-    # degree to radian
-    r = np.radians(deg)
-    C = np.cos(r)
-    S = np.sin(r)
-    # rotate x
-    R_x = np.matrix((
-        (1, 0, 0),
-        (0, C, -S),
-        (0, S, C)
-    ))
-    return R_x
+def hierarchy(mf):
+    global gcount
+    global pcount
+    prm = []
+    if len(mf) > 1:
+         if not isinstance(mf[0], list):
+            if mf[0] == 'ref':
+                prHead = prim[mf[1]][0]
+                prVal  = prim[mf[1]][1]
 
-def rotate_y(deg):
-    # degree to radian
-    r = np.radians(deg)
-    C = np.cos(r)
-    S = np.sin(r)
-    # rotate y
-    R_y = np.matrix((
-        (C, 0, S),
-        (0, 1, 0),
-        (-S, 0, 1)
-    ))
-    return R_y
+                
 
-def rotate_z(deg):
-     # degree to radian
-    r = np.radians(deg)
-    C = np.cos(r)
-    S = np.sin(r)
-     # rotate z
-    R_z = np.matrix((
-        (C, -S, 0),
-        (S, C, 0),
-        (0, 0, 1)
-    ))
+                if(prHead == 'pEllipsoid'):
+                    spos = prVal.replace('Vector3(','')
+                    spos = spos.replace(')','')
+                    sval = spos.split(',')
+                    spos = 'vec3(' + str(float(sval[0]))  + ' ,' + str(float(sval[1])) + ' ,' + str(float(sval[2])) + ')'
+                    prm.append('vec3 ElRa_' + str(gcount) + ' = ' + spos + ';')
+                    gcount += 1
+                if prHead == 'pBox':
+                    spos = prVal.replace('Vector3(','')
+                    spos = spos.replace(')','')
+                    sval = spos.split(',')
+                    spos = 'vec3(' + str(float(sval[0]))  + ' ,' + str(float(sval[1])) + ' ,' + str(float(sval[2])) + ')'
+                    prm.append('vec3 BoSi_' + str(gcount) + ' = ' + spos + ';')
+                    gcount += 1
+                if prHead == 'pCylinder':
+                    val = str(float(prVal))
+                    prm.append('float ToRa_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                    val  = str(float(prim[mf[1]][2]))
+                    prm.append('float TOra_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                if prHead == 'pTorus':
+                    val = str(float(prVal))
+                    prm.append('float ToRa_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                    val  = str(float(prim[mf[1]][2]))
+                    prm.append('float ToRa_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                if prHead == 'pSphere':
+                   val = str(float(prVal))
+                   prm.append('float SpRa_' + str(gcount) + ' = ' + val + ';')
+                   gcount += 1
+                if prHead == 'pCone':
+                    val = str(float(prVal))
+                    prm.append('vec2 CoGe_' + str(gcount)  + ' = vec2(' + val + ' ,' + val +');')
+                    gcount += 1
+                    val = str(float(prim[mf[1]][2]))
+                    prm.append('float CoHe_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                if prHead == 'pCappedTorus':
+                    fval = float(np.radians(prVal))
+                    si = np.sin(fval)
+                    co = np.cos(fval)
+                    prm.append('vec2 CaGe_' + str(gcount)  + ' = vec2(' + str(si) + ' ,' + str(co) +');')
+                    gcount += 1
+                    val = str(float(prim[mf[1]][2]))
+                    prm.append('float CaRa_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                    val = str(float(prim[mf[1]][3]))
+                    prm.append('float CaRa_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                if prHead == 'pCappedCone':
+                    val = str(float(prVal))
+                    prm.append('float CaHe_' + str(gcount)  + ' = '+ val + ';')
+                    gcount += 1
+                    val = str(float(prim[mf[1]][2]))
+                    prm.append('float CaRa_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                    prm.append('float CaRa_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                if prHead == 'pCapsule':
+                    val = str(float(prVal))
+                    prm.append('float CaRa_' + str(gcount)  + ' = '+ val + ';')
+                    gcount += 1
+                    val = str(float(prim[mf[1]][2]))
+                    prm.append('float CaHe_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                if prHead == 'pRoundCone':
+                    val = str(float(prVal))
+                    prm.append('float RoRa_' + str(gcount)  + ' = ' + str(val) + ';')
+                    gcount += 1
+                    val = str(float(prim[mf[1]][2]))
+                    prm.append('float RoRa_' + str(gcount) + ' = ' + val + ';')
+                    val = str(float(prim[mf[1]][3]))
+                    gcount += 1
+                    prm.append('float RoHe_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                if prHead == 'pPlane':
+                    val = str(prVal)
+                    val = val.replace('Vector3','vec3')
+                    #val1 = str(float(prVal))
+                    prm.append('vec3 PlNo_' + str(gcount)  + ' = ' + str(val) + ';')
+                    gcount += 1
+                    val = str(float(prim[mf[1]][2]))
+                    prm.append('float PlDi_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                if prHead == 'pFrame':
+                    val = str((prVal))
+                    val = val.replace('Vector3','vec3')
+                    #val1 = str(float(prVal))
+                    prm.append('vec3 FrSi_' + str(gcount)  + ' = ' + str(val) + ';')
+                    gcount += 1
+                    val = str(float(prim[mf[1]][2]))
+                    prm.append('float FrTh_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                if prHead == 'pSolidAngle':
+                    fval = float(np.radians(prVal))
+                    si = np.sin(fval)
+                    co = np.cos(fval)
+                    prm.append('vec2 SoGe_' + str(gcount)  + ' = vec2(' + str(si) + ' ,' + str(co) +');')
+                    gcount += 1
+                    val = str(float(prim[mf[1]][2]))
+                    prm.append('float SoRa_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                if prHead == 'pLink':
+                    val = str(float(prVal))
+                    prm.append('float LiLe_' + str(gcount)  + ' = ' + str(val) + ';')
+                    gcount += 1
+                    val = str(float(prim[mf[1]][2]))
+                    prm.append('float LiRa_' + str(gcount) + ' = ' + val + ';')
+                    val = str(float(prim[mf[1]][3]))
+                    gcount += 1
+                    prm.append('float LiRa_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                if prHead == 'pOctahedron':
+                    val = str(float(prVal))
+                    prm.append('float OcRa_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                    #pHexPrism
+                if prHead == 'pHexPrism':
+                    val = str(float(prVal))
+                    prm.append('float HeHe_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                    val = str(float(prim[mf[1]][2]))
+                    prm.append('float HeRa_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
 
-    return R_z
+                if prHead == 'pTriPrism':
+                    val = str(float(prVal))
+                    prm.append('float TrHe_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+                    val = str(float(prim[mf[1]][2]))
+                    prm.append('float TrRa_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
 
-# read json file
-f = open('test10.json', 'r')
-json_dict = json.load(f)
-#print('json_dict:{}'.format(type(json_dict)))
-n = 0
-val0 = []
-val1 = []
-scale = []
-pos   = []
-rotate = []
-for v in json_dict.values():
-    
-    if n == 0:
-        val0 = v
-    if n == 1:
-        val1 = v
+                if prHead == 'pPyramid':
+                    val = str(float(prVal))
+                    prm.append('float PyHe_' + str(gcount) + ' = ' + val + ';')
+                    gcount += 1
+               
 
-    n += 1
-n = 0
-for vals in val0:
-    #print(vals[1], '-->scale')
-    scale.append(vals[1].replace('Vector3(','vec3('))
-    j = 0
-    for vv in val1[n]:
-        if j == 1:
-            k = 0
-            for vvv in vv:
-                if k == 0:
-                   rotate.append(vvv[2])
-                k += 1
-        if j == 2:
-           #print(vv,'-->pos')
-           pos.append(vv.replace('Vector3(','vec3('))
-        j += 1
-    n += 1
-    #print("-----")
-#rot = rotate_x(0.)*rotate_y(0.)*rotate_z(10.)
-#e = np.linalg.inv(rot)
-#print(scale)
-#print(pos)
-print ('#')
-bl = []
-i = 0
-for r in rotate:
-     t = r.replace('Vector3(','')
-     t = t.replace(')','')
-     u = t.split(',')
-     # rotation
-     v0 = float(u[0])
-     v1 = float(u[1])
-     v2 = float(u[2])
-     rot = rotate_x(v0)*rotate_y(v1)*rotate_z(v2)
-     qt = quaternion.from_rotation_matrix(rot, nonorthogonal=True)
-     axis = quaternion.as_rotation_vector(qt)
-     angle = np.degrees(qt.angle())
-     blob = 'blob'+str(i)
-     blob.replace(' ','')
-     bl.append(blob)
-     if angle == 0:
-         axis[2] = 1.0
-     print('float',blob,'= sdEllipsoid(Rotate(pos -',pos[i],', vec3(',axis[0],',',axis[1],',',axis[2],'),', -angle,'),',scale[i],');')
-     i += 1
-i = 0
-body = 'float body = '
-for blb in bl:
-
-    if i < len(bl)-1:
-        body = body + 'smin(' + blb + ','
+                for pm in prm:
+                    print(pm)
+            #------------------------------------------------------
+            if(mf[0] == 'mRepLim'):
+                    #print(mf,'-- ',mf[3])
+                    spos = mf[2].replace('Vector3(','')
+                    spos = spos.replace(')','')
+                    sval = spos.split(',')
+                    spos = 'vec3(' + str(float(sval[0]))  + ' ,' + str(float(sval[1])) + ' ,' + str(float(sval[2])) + ');'
+                    hd = 'vec3 ReCe_'+ str(gcount)
+                    print(hd,' = ',spos)
+                    gcount += 1   
+                    spos = mf[3].replace('Vector3(','')
+                    spos = spos.replace(')','')
+                    sval = spos.split(',')
+                    spos = 'vec3(' + str(float(sval[0]))  + ' ,' + str(float(sval[1])) + ' ,' + str(float(sval[2])) + ');'
+                    hd = 'vec3 ReGr_'+ str(gcount)
+                    print(hd,' = ',spos)
+                    gcount += 1   
+            if(mf[0] == 'mRepInf'):
+                    #print(mf,'-- ',mf[2])
+                    spos = mf[2].replace('Vector3(','')
+                    spos = spos.replace(')','')
+                    sval = spos.split(',')
+                    spos = 'vec3(' + str(float(sval[0]))  + ' ,' + str(float(sval[1])) + ' ,' + str(float(sval[2])) + ');'
+                    hd = 'vec3 ReCe_'+ str(gcount)
+                    print(hd,' = ',spos)
+                    gcount += 1   
+            if(mf[0] == 'mMirror'):
+                    #print(mf,'-- ',mf[3])    
+                    spos = mf[2].replace('Vector3(','')
+                    spos = spos.replace(')','')
+                    sval = spos.split(',')
+                    spos = 'vec3(' + str(float(sval[0]))  + ' ,' + str(float(sval[1])) + ' ,' + str(float(sval[2])) + ');'
+                    hd = 'vec3 MiNo_'+ str(gcount)
+                    print(hd,' = ',spos)
+                    gcount += 1
+                    hd = 'float MiDi_'+str(gcount)
+                    print(hd,' = ' ,str(float(mf[3])),';')
+                    gcount += 1
+            if mf[0] == 'mTranslation':
+            # get vector float value
+                spos = mf[len(mf)-1].replace('Vector3(','') 
+                spos = spos.replace(')','')
+                u = spos.split(',')
+                v0 = -float(u[0])
+                v1 = -float(u[1])
+                v2 = -float(u[2])
+                rt = 'vec3 TrIn_'+str(gcount) #header
+                rt = rt + ' = vec3(' + str(v0) +' ,'+ str(v1) + ' ,'  + str(v2) + ');'
+                print(rt)
+                gcount += 1
+            if mf[0] == 'mRotation':
+                rv = mf[2]     #totatuon value
+                rt = 'mat3 RoIn_'+str(gcount)
+                #
+                t = rv.replace('Vector3(','')
+                t = t.replace(')','')
+                u = t.split(',')
+                # get float rotation value
+                v0 = -float(u[0])
+                v1 = -float(u[1])
+                v2 = -float(u[2])
+                
+                rotvec = np.array([np.radians(v0), np.radians(v1), np.radians(v2)])
+                rot = Rotation.from_rotvec(rotvec)
+                
+                e = np.linalg.inv(rot.as_matrix()) #inverse matrix
+                # for output mat3
+                strm = str(e)
+                strm = strm.replace('[[' ,'mat3(')
+                strm = strm.replace(']]' ,');')
+                strm = strm.replace(' ' ,'_')
+                strm = strm.replace('\n' ,'')
+                strm = strm.replace(']_[' ,'_')
+                strm = strm.replace('_' ,',')
+                strm = strm.replace('(,' ,'( ')
+        #
+                while  ',,' in strm:
+                    strm = strm.replace(',,' ,',')
+                strm = strm.replace(',)' ,')')
+                # print mat3
+                print(rt,'=', strm)
+                gcount += 1
+            for mem in mf:
+                if isinstance(mem, list):
+                    for mm in mem:
+                        #print('---> ',mm,len(mm))
+                        hierarchy(mm)
+            return
     else:
-        body = body + blb
-    i += 1
-i = 0
-for blb in bl:
-    if i < len(bl)-1:
-        body = body +',s)'
-    i += 1
-body = body + ';'        
-print (body) 
-print ('#')
+        return
     
+# analyze operator_tree
+def hierarchy2(mf):
+    global gcount
+    if len(mf) > 1:
+        if not isinstance(mf[0], list):
+                #print('===',mf)
+                if(mf[0] == 'oThicken'):
+                    print('float ThTh_' + str(gcount) + ' = ' + str(mf[2]) + ';')
+                    gcount += 1
+                if(mf[0] == 'oSmoothUnion'):
+                    print('float SmTr_' + str(gcount) + ' = ' + str(mf[2]) + ';')
+                    gcount += 1
+                if(mf[0] == 'oSmoothSubtraction'):
+                    print('float SmTr_' + str(gcount) + ' = ' + str(mf[2]) + ';')
+                    gcount += 1
+                #if(mf[0] == 'oSubtraction'):
+                if(mf[0] == 'oOnion'):
+                    print('float OnTh_' + str(gcount) + ' = ' + str(mf[2]) + ';')
+                #    print('float SpRa_' + str(gcount) + ' = ' + str(mf[2]) + ';')
+                #    gcount += 1
+                    gcount += 1
+                if(mf[0] == 'oSmoothIntersection'):
+                    print('float SmTr_' + str(gcount) + ' = ' + str(mf[2]) + ';')
+                    gcount += 1
+
+        for mem in mf:
+            if isinstance(mem, list):
+                hierarchy2(mem)
+
+global gcount
+global pcount
+gcount = 1
+pcount = 0
+#
+#  main    
+# read json file
+f = open('sample.json', 'r')
+json_dict = json.load(f)
+prim = json_dict['primitives']
+modi = json_dict['modifiers']
+print('//----------------------------------------------------------------')
+for md in  modi:
+    hierarchy(md)
+opt = json_dict['operator_tree']
+###    hierarchy2(a[0])
+
+for op in  opt:
+    #print('----',len(opt),'  ',opt)
+    hierarchy2(op)
+print('//----------------------------------------------------------------')
+
+
+
+
+
