@@ -1,67 +1,29 @@
 import json
+from scipy.spatial.transform import Rotation
 import numpy as np
-# rotation matrix
-def rotate_x(deg):
-    # degree to radian
-    r = np.radians(deg)
-    C = np.cos(r)
-    S = np.sin(r)
-    # rotate x
-    R_x = np.matrix((
-        (1, 0, 0),
-        (0, C, -S),
-        (0, S, C)
-    ))
-    return R_x
 
-def rotate_y(deg):
-    # degree to radian
-    r = np.radians(deg)
-    C = np.cos(r)
-    S = np.sin(r)
-    # rotate y
-    R_y = np.matrix((
-        (C, 0, S),
-        (0, 1, 0),
-        (-S, 0, 1)
-    ))
-    return R_y
-
-def rotate_z(deg):
-     # degree to radian
-    r = np.radians(deg)
-    C = np.cos(r)
-    S = np.sin(r)
-     # rotate z
-    R_z = np.matrix((
-        (C, -S, 0),
-        (S, C, 0),
-        (0, 0, 1)
-    ))
-    return R_z
-
-def total(mf):
-    #print(">>>> ",mf)
+def hierarchy(mf):
     global gcount
     global pcount
-    #print('>>>> ',len(mf),mf)
-    #
     prm = []
     if len(mf) > 1:
-         #print('===> ', mf,len(mf))
          if not isinstance(mf[0], list):
             if mf[0] == 'ref':
-                #print('>>>>  ',prim[mf[1]],' refnum = ', mf[1])
                 prHead = prim[mf[1]][0]
-                #prVal  = prim[mf[1]][0]
                 prVal  = prim[mf[1]][1]
 
                 if(prHead == 'pEllipsoid'):
-                    spos = prVal.replace('Vector3','vec3')
+                    spos = prVal.replace('Vector3(','')
+                    spos = spos.replace(')','')
+                    sval = spos.split(',')
+                    spos = 'vec3(' + str(float(sval[0]))  + ' ,' + str(float(sval[1])) + ' ,' + str(float(sval[2])) + ')'
                     prm.append('vec3 ElRa_' + str(gcount) + ' = ' + spos + ';')
                     gcount += 1
                 if prHead == 'pBox':
-                    spos = prVal.replace('Vector3','vec3')
+                    spos = prVal.replace('Vector3(','')
+                    spos = spos.replace(')','')
+                    sval = spos.split(',')
+                    spos = 'vec3(' + str(float(sval[0]))  + ' ,' + str(float(sval[1])) + ' ,' + str(float(sval[2])) + ')'
                     prm.append('vec3 BoSi_' + str(gcount) + ' = ' + spos + ';')
                     gcount += 1
                 if prHead == 'pCylinder':
@@ -84,21 +46,16 @@ def total(mf):
                    gcount += 1
                 if prHead == 'pCone':
                     val = str(float(prVal))
-                    #val1 = str(float(prVal))
                     prm.append('vec2 CoGe_' + str(gcount)  + ' = vec2(' + val + ' ,' + val +');')
                     gcount += 1
                     val = str(float(prim[mf[1]][2]))
                     prm.append('float CoHe_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
                 if prHead == 'pCappedTorus':
-                    #print('====================',prim[mf[1]][1], ' ',prim[mf[1]][2])
-                    #val = str(float(prVal))
-                    #val1 = str(float(prVal))
                     fval = float(np.radians(prVal))
                     si = np.sin(fval)
                     co = np.cos(fval)
                     prm.append('vec2 CaGe_' + str(gcount)  + ' = vec2(' + str(si) + ' ,' + str(co) +');')
-                    #prm.append('vec2 CaGe_' + str(gcount)  + ' = vec2(' + val + ' ,' + val +');')
                     gcount += 1
                     val = str(float(prim[mf[1]][2]))
                     prm.append('float CaRa_' + str(gcount) + ' = ' + val + ';')
@@ -107,29 +64,23 @@ def total(mf):
                     prm.append('float CaRa_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
                 if prHead == 'pCappedCone':
-                    #print('====================',prim[mf[1]][1], ' ',prim[mf[1]][2])
                     val = str(float(prVal))
-                    #val1 = str(float(prVal))
                     prm.append('float CaHe_' + str(gcount)  + ' = '+ val + ';')
                     gcount += 1
                     val = str(float(prim[mf[1]][2]))
                     prm.append('float CaRa_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
-                    #val1 = str(float(prim[mf[1]][3]))
                     prm.append('float CaRa_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
                 if prHead == 'pCapsule':
                     val = str(float(prVal))
-                    #val1 = str(float(prVal))
                     prm.append('float CaRa_' + str(gcount)  + ' = '+ val + ';')
                     gcount += 1
                     val = str(float(prim[mf[1]][2]))
                     prm.append('float CaHe_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
                 if prHead == 'pRoundCone':
-                    #print('====================',prim[mf[1]][1], ' ',prim[mf[1]][2])
                     val = str(float(prVal))
-                    #val1 = str(float(prVal))
                     prm.append('float RoRa_' + str(gcount)  + ' = ' + str(val) + ';')
                     gcount += 1
                     val = str(float(prim[mf[1]][2]))
@@ -139,7 +90,6 @@ def total(mf):
                     prm.append('float RoHe_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
                 if prHead == 'pPlane':
-                    #print('====================',prim[mf[1]][1], ' ',prim[mf[1]][2])
                     val = str(prVal)
                     val = val.replace('Vector3','vec3')
                     #val1 = str(float(prVal))
@@ -149,7 +99,6 @@ def total(mf):
                     prm.append('float PlDi_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
                 if prHead == 'pFrame':
-                    #print('====================',prim[mf[1]][1], ' ',prim[mf[1]][2])
                     val = str((prVal))
                     val = val.replace('Vector3','vec3')
                     #val1 = str(float(prVal))
@@ -159,23 +108,16 @@ def total(mf):
                     prm.append('float FrTh_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
                 if prHead == 'pSolidAngle':
-                   #print('====================',prim[mf[1]][1], ' ',prim[mf[1]][2])
                     fval = float(np.radians(prVal))
                     si = np.sin(fval)
                     co = np.cos(fval)
                     prm.append('vec2 SoGe_' + str(gcount)  + ' = vec2(' + str(si) + ' ,' + str(co) +');')
-                    #val0 = val0.replace('Vector3','vec3')
-                    #val1 = str(float(prVal))
-                    #prm.append('vec2 SoGe_' + str(gcount)  + ' = vec2(' + val + ' ,' + val +');')
-                    #prm.append('vec2 SoGe_' + str(gcount)  + ' = ' + val0 +  ';')
                     gcount += 1
                     val = str(float(prim[mf[1]][2]))
                     prm.append('float SoRa_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
                 if prHead == 'pLink':
-                    #print('====================',prim[mf[1]][1], ' ',prim[mf[1]][2])
                     val = str(float(prVal))
-                    #val1 = str(float(prVal))
                     prm.append('float LiLe_' + str(gcount)  + ' = ' + str(val) + ';')
                     gcount += 1
                     val = str(float(prim[mf[1]][2]))
@@ -184,9 +126,7 @@ def total(mf):
                     gcount += 1
                     prm.append('float LiRa_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
-                    #pOctahedron
                 if prHead == 'pOctahedron':
-                    #print('====================',prim[mf[1]][1], ' ',prim[mf[1]][2])
                     val = str(float(prVal))
                     prm.append('float OcRa_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
@@ -210,18 +150,12 @@ def total(mf):
                 if prHead == 'pPyramid':
                     val = str(float(prVal))
                     prm.append('float PyHe_' + str(gcount) + ' = ' + val + ';')
-                    #val = str(float(prim[mf[1]][2]))
-                    #prm.append('float HeRa_' + str(gcount) + ' = ' + val + ';')
                     gcount += 1
                
 
                 for pm in prm:
                     print(pm)
-                    #gcount += 
-
-            #val1 = str(float(prim[1][2]))
-            #prm.append('float CyHe_' + str(gcount) + ' = ' + val1 + ';')
-            #gcount += 1
+                    
             if mf[0] == 'mTranslation':
             # get vector float value
                 spos = mf[len(mf)-1].replace('Vector3(','') 
@@ -230,7 +164,6 @@ def total(mf):
                 v0 = -float(u[0])
                 v1 = -float(u[1])
                 v2 = -float(u[2])
-                # make vec3 TrIn_?? = .... format
                 rt = 'vec3 TrIn_'+str(gcount) #header
                 rt = rt + ' = vec3(' + str(v0) +' ,'+ str(v1) + ' ,'  + str(v2) + ');'
                 print(rt)
@@ -246,9 +179,11 @@ def total(mf):
                 v0 = -float(u[0])
                 v1 = -float(u[1])
                 v2 = -float(u[2])
-                #rot = rotate_x(v0)*rotate_z(v2)
-                rot = rotate_x(v0)*rotate_y(v1)*rotate_z(v2)
-                e = np.linalg.inv(rot) #inverse matrix
+                
+                rotvec = np.array([np.radians(v0), np.radians(v1), np.radians(v2)])
+                rot = Rotation.from_rotvec(rotvec)
+                
+                e = np.linalg.inv(rot.as_matrix()) #inverse matrix
                 # for output mat3
                 strm = str(e)
                 strm = strm.replace('[[' ,'mat3(')
@@ -269,20 +204,15 @@ def total(mf):
                 if isinstance(mem, list):
                     for mm in mem:
                         #print('---> ',mm,len(mm))
-                        total(mm)
+                        hierarchy(mm)
             return
     else:
         return
-    #print('here ---> ',mf)
-    
-    
-
     
 # analyze operator_tree
-def total2(mf):
+def hierarchy2(mf):
     global gcount
     if len(mf) > 1:
-        #print('> ',len(mf[0]),len(mf), mf[0],mf)
         if not isinstance(mf[0], list):
                 #print('===',mf)
                 if(mf[0] == 'oThicken'):
@@ -306,7 +236,7 @@ def total2(mf):
 
         for mem in mf:
             if isinstance(mem, list):
-                total2(mem)
+                hierarchy2(mem)
 
 global gcount
 global pcount
@@ -318,18 +248,16 @@ pcount = 0
 f = open('sample.json', 'r')
 json_dict = json.load(f)
 prim = json_dict['primitives']
-#j = 0
 modi = json_dict['modifiers']
 print('//----------------------------------------------------------------')
 for md in  modi:
-    total(md)
-    #j += 1
+    hierarchy(md)
 opt = json_dict['operator_tree']
-###    total2(a[0])
+###    hierarchy2(a[0])
 
 for op in  opt:
     #print('----',len(opt),'  ',opt)
-    total2(op)
+    hierarchy2(op)
 print('//----------------------------------------------------------------')
 
 
