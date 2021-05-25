@@ -1,75 +1,16 @@
-//
+
 // Adapted from original shader: https://www.shadertoy.com/view/ldcyW4
 // modeled by https://joetech.itch.io/sdf-editor
-// converted by cnvSDF3
-
-//
+// converted by cnvSDF
 
 //----------------------------------------------------------------
-vec3 TrIn_1 = vec3(-3.0 ,-0.0 ,-0.0);
-float CaHe_2 = 0.5;
-float CaRa_3 = 1.0;
-float CaRa_4 = 1.0;
-vec3 TrIn_5 = vec3(-1.81 ,-0.59 ,-1.79);
-vec2 CoGe_6 = vec2(30.0 ,30.0);
-float CoHe_7 = 1.0;
-vec3 TrIn_8 = vec3(3.0 ,-0.0 ,-0.37);
-float RoRa_9 = 1.0;
-float RoRa_10 = 0.5;
-float RoHe_11 = 1.0;
-vec3 TrIn_12 = vec3(-0.0 ,-0.0 ,-0.0);
-float CaRa_13 = 1.0;
-float CaHe_14 = 1.0;
-vec3 TrIn_15 = vec3(2.0 ,-2.0 ,2.0);
-vec3 BoSi_16 = vec3( 1, 1, 1 );
-vec3 TrIn_17 = vec3(-0.5 ,-1.0 ,3.0);
-vec3 FrSi_18 = vec3( 1, 1, 1 );
-float FrTh_19 = 0.1;
-vec3 TrIn_20 = vec3(-3.54 ,-1.68 ,2.0);
-vec2 SoGe_21 = vec2(0.7071067811865476 ,0.7071067811865476);
-float SoRa_22 = 1.0;
-vec3 TrIn_23 = vec3(-0.0 ,1.52 ,-0.0);
-vec3 PlNo_24 = vec3( 0, 1, 0 );
-float PlDi_25 = -0.72;
-vec3 TrIn_26 = vec3(-4.0 ,-0.44 ,3.0);
-float OcRa_27 = 1.0;
-vec3 TrIn_28 = vec3(1.43 ,0.65 ,-1.7);
-float PyHe_29 = 1.0;
-vec3 TrIn_30 = vec3(5.0 ,-0.0 ,-2.0);
-float TrHe_31 = 1.0;
-float TrRa_32 = 1.0;
-vec3 TrIn_33 = vec3(4.5 ,-2.0 ,-0.0);
-float HeHe_34 = 1.0;
-float HeRa_35 = 1.0;
-vec3 TrIn_36 = vec3(6.5 ,-0.0 ,-0.0);
-vec2 CaGe_37 = vec2(0.8660254037844387 ,-0.4999999999999998);
-float CaRa_38 = 1.0;
-float CaRa_39 = 0.25;
+vec3 BoSi_1 = vec3(1.0 ,1.0 ,1.0);
 //----------------------------------------------------------------
 const float epsilon = 0.01;
 const float pi = 3.14159265359;
 const float halfpi = 1.57079632679;
 const float twopi = 6.28318530718;
 
-// rotate
-vec3 rotate(vec3 p, float angle, vec3 axis){
-    vec3 a = normalize(axis);
-    float s = sin(angle);
-    float c = cos(angle);
-    float r = 1.0 - c;
-    mat3 m = mat3(
-        a.x * a.x * r + c,
-        a.y * a.x * r + a.z * s,
-        a.z * a.x * r - a.y * s,
-        a.x * a.y * r - a.z * s,
-        a.y * a.y * r + c,
-        a.z * a.y * r + a.x * s,
-        a.x * a.z * r + a.y * s,
-        a.y * a.z * r - a.x * s,
-        a.z * a.z * r + c
-    );
-    return m * p;
-}
 
 mat3 rotateMat(vec3 p, float angle, vec3 axis){
     vec3 a = normalize(axis);
@@ -263,6 +204,8 @@ float pOctahedron(float s, vec3 p)
     // return (p.x+p.y+p.z-s)*0.57735027;
 }
 
+
+
 float pPyramid(float h, vec3 p)
 {
     float m2 = h*h + 0.25;
@@ -359,77 +302,8 @@ float oSmoothIntersection(float k, float d1, float d2)
     return mix(d1, d2, h) + k*h*(1.0-h);
 }
 //-----------------------------------------------------------------
-float sdf(vec3 p0)
-{
-	float d1;
-	float d2;
-	float d3;
-	float d4;
-	float d5;
-	float d6;
-	float d7;
-	float d8;
-	float d9;
-	float d10;
-	float d11;
-	float d12;
-	float d13;
 
-	{
-		vec3 p1 = mTranslation(TrIn_1, p0);
-		d1 = pCappedCone(CaHe_2, CaRa_3, CaRa_4, p1);
-	}
-	{
-		vec3 p1 = mTranslation(TrIn_5, p0);
-		d2 = pCone(CoGe_6, CoHe_7, p1);
-	}
-	{
-		vec3 p1 = mTranslation(TrIn_8, p0);
-		d3 = pRoundCone(RoRa_9, RoRa_10, RoHe_11, p1);
-	}
-	{
-		vec3 p1 = mTranslation(TrIn_12, p0);
-		d4 = pCapsule(CaRa_13, CaHe_14, p1);
-	}
-	{
-		vec3 p1 = mTranslation(TrIn_15, p0);
-		d5 = pBox(BoSi_16, p1);
-	}
-	{
-		vec3 p1 = mTranslation(TrIn_17, p0);
-		d6 = pFrame(FrSi_18, FrTh_19, p1);
-	}
-	{
-		vec3 p1 = mTranslation(TrIn_20, p0);
-		d7 = pSolidAngle(SoGe_21, SoRa_22, p1);
-	}
-	{
-		vec3 p1 = mTranslation(TrIn_23, p0);
-		d8 = pPlane(PlNo_24, PlDi_25, p1);
-	}
-	{
-		vec3 p1 = mTranslation(TrIn_26, p0);
-		d9 = pOctahedron(OcRa_27, p1);
-	}
-	{
-		vec3 p1 = mTranslation(TrIn_28, p0);
-		d10 = pPyramid(PyHe_29, p1);
-	}
-	{
-		vec3 p1 = mTranslation(TrIn_30, p0);
-		d11 = pTriPrism(TrHe_31, TrRa_32, p1);
-	}
-	{
-		vec3 p1 = mTranslation(TrIn_33, p0);
-		d12 = pHexPrism(HeHe_34, HeRa_35, p1);
-	}
-	{
-		vec3 p1 = mTranslation(TrIn_36, p0);
-		d13 = pCappedTorus(CaGe_37, CaRa_38, CaRa_39, p1);
-	}
-	return oUnion(d3, oUnion(d1, oUnion(d2, oUnion(d4, oUnion(d5, oUnion(d6, oUnion(d7, oUnion(d8, oUnion(d9, oUnion(d10, oUnion(d11, oUnion(d12, d13))))))))))));
-}
-//-------------------------------------------------------------
+
 //Distance Field function by iq :
 //http://iquilezles.org/www/articles/distfunctions/distfunctions.htm
 float sdSphere(vec3 p, float s)
@@ -480,8 +354,15 @@ vec3 TransformPosition(vec3 pos)
     
     return pos;
 }
+//////////////////////////////////////////////////////////////////////////////
+float sdf(vec3 p0)
+{
+	float d1;
 
-
+	d1 = pBox(BoSi_1, p0);
+	return d1;
+}
+//////////////////////////////////////////////////////////////////////////////
 vec3 RayMarch(vec3 rayDir, vec3 cameraOrigin)
 {
     const int maxItter = 128;
